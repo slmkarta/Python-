@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/">Главная</a>
+        <a href="/dashboard">Личный кабинет</a>
+        <a href="/login">Вход</a>
+        <a href="/register">Регистрация</a>
+    </div>
+    <div class="container">
+        <h1>Добро пожаловать, {{ user.username }}!</h1>
+        <h2>Ваши книги:</h2>
+        <div class="book-list">
+            {% if books %}
+            {% for book in books %}
+            <div class="book-item">
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.description }}</p>
+                <button onclick="openBook('{{ book.id }}', '{{ book.content | escape }}')">Открыть книгу</button>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>У вас пока нет книг. <a href="/">Перейти в магазин</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p id="bookContent"></p>
+        </div>
+    </div>
+
+    <script>
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        function openBook(bookId, bookContent) {
+            document.getElementById("bookContent").innerText = bookContent;
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
